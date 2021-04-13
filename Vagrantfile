@@ -1,8 +1,4 @@
 # encoding: utf-8
-# -*- mode: ruby -*-
-# vim: ft=ruby expandtab shiftwidth=2 tabstop=2
-# vi: set ft=ruby :
-
 require 'yaml'
 
 # Sets the minimum version for vagrant.
@@ -10,7 +6,7 @@ Vagrant.require_version '>= 1.8.6'
 
 # Configure vagrant.
 Vagrant.configure(2) do |config|
-  
+
   # Load the custom configuration variables.
   _conf = YAML.load(
     File.open(
@@ -29,7 +25,7 @@ Vagrant.configure(2) do |config|
   #config.ssh.password = "vagrant"
   #config.vm.provision :file, :source => "provision/unsecure.pub", :destination => "~/.ssh/authorized_keys"
   #config.vm.provision :shell, :name => "Setup authorized_keys", :inline => "mkdir  ~/.ssh && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys && chown -R vagrant:vagrant ~/.ssh"
- 
+
   # Forcing config variables
   _conf["vagrant_dir"] = "/vagrant"
 
@@ -45,11 +41,11 @@ Vagrant.configure(2) do |config|
       config.vm.hostname = ENV['hostname'] || _conf['hostname']
     end
   end
-  
+
   # Set configuration for base os image.
   config.vm.box = ENV['dist_box'] || _conf['dist_box']
   config.vm.box_check_update = ENV['dist_box_update'] || _conf['dist_box_update']
-  
+
   # Check if base os image requires version.
   if _conf.has_key?('dist_box_version')
     config.vm.box_version = _conf['dist_box_version']
@@ -88,7 +84,7 @@ Vagrant.configure(2) do |config|
       config.disksize.size = _conf['disksize']
     end
   end
-  
+
   #-----------------------------
   # Network Settings
   #-----------------------------
@@ -126,10 +122,10 @@ Vagrant.configure(2) do |config|
     shell.args = %q{/etc/sudoers.d/root_ssh_agent "Defaults    env_keep += \"SSH_AUTH_SOCK\""}
     shell.name = "creating /etc/sudores.d/root_ssh_agent"
   end
-	
+
   # Sync folders configure.
   if _conf.has_key?('synced_folder') && _conf.has_key?('document_root')
-    config.vm.synced_folder _conf['synced_folder'], _conf['document_root'], :create => "true", :mount_options => ['dmode=755', 'fmode=644'], 
+    config.vm.synced_folder _conf['synced_folder'], _conf['document_root'], :create => "true", :mount_options => ['dmode=755', 'fmode=644'],
     SharedFoldersEnableSymlinksCreate: true
   end
 
@@ -167,7 +163,7 @@ Vagrant.configure(2) do |config|
     # Setup cpus and ram.
     vb.memory = memory
     vb.cpus = cpu
-    
+
     # If cpus > 1: enable io apic.
     if 1 < _conf['cpus'].to_i
       vb.customize ['modifyvm', :id, '--ioapic', 'on']
@@ -202,12 +198,12 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "provision/vagrant.yml"
   end
 
-  # Check if provision-pre.sh file and execute file if is exists.
+  # Check if after.sh file and execute file if is exists.
   if File.exists?(File.join(File.dirname(__FILE__), 'provision/after.sh')) then
     config.vm.provision :shell, :path => File.join( File.dirname(__FILE__), 'provision/after.sh' )
   end
 
-  # Check if run-always.sh file and execute file if is exists.
+  # Check if always.sh file and execute file if is exists.
   if File.exists?(File.join(File.dirname(__FILE__), 'provision/always.sh')) then
     config.vm.provision :shell, :path => File.join( File.dirname(__FILE__), 'provision/always.sh' ), run: 'always'
   end
