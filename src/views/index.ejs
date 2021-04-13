@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <title>Example File Uploads</title>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <h1>File Upload</h1>
+      <% if (typeof locals.msg != 'undefined' && locals.msg.length > 0){ %>
+        <div class="alert alert-danger"><%= locals.msg %></div>
+      <% } %>
+      <form class="form-horizontal" action="/upload" method="POST" enctype="multipart/form-data">
+        <div class="file-field input-field">
+          <div class="btn grey">
+            <input name="<%= locals.upload_container_id %>" type="file" id="<%= locals.upload_container_id %>">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success" onclick="return (document.getElementById('<%=locals.upload_container_id%>').files.length != 0)">Submit</button>
+      </form>
+    </div>
+    <% if (typeof files != 'undefined') { %>
+      <div class="row">
+        <table class="table" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Created at</th>
+              <th>File info</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% for (let i = 0; i < files.length; i++) { %>
+            <tr>
+              <td><%= files[i].createdAt %></td>
+              <td>
+                <table class="table" cellspacing="0">
+                  <% for (let j = 0; j < files[i].attrs.length; j++) { %>
+                    <% Object.keys(files[i].attrs[j]).forEach(function(key) { %>
+                      <td><%= key %></td>
+                      <td><%= files[i].attrs[j][key] %></td>
+                    <% }) %>
+                  <% } %>
+                </table>
+              </td>
+              <td>
+                <form class="form-horizontal" action="/del/<%= files[i]._id %>?_method=DELETE" method="POST">
+                  <button type="submit" class="btn btn-danger btn-xs">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% } %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

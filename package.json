@@ -1,0 +1,23 @@
+{
+  "name": "freshcredit-example",
+  "version": "0.0.1",
+  "description": "Example for",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js"
+  },
+  "author": "Chugarev Alexey",
+  "dependencies": {
+    "bunyan": "^1.8.15",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "cron-job-manager": "^2.1.4",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "mongoose": "^5.12.3",
+    "multer": "^1.4.2"
+  }
+}
